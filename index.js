@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
 const cors = require("cors")
+const bodyParser = require('body-parser');
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
 const uri = process.env.MONGODB_URI;
@@ -17,6 +18,7 @@ const client = new MongoClient(uri, {
 
 // middlewares 
 app.use(cors());
+app.use(bodyParser.json());
 
 async function run() {
 
@@ -39,6 +41,20 @@ async function run() {
         res.status(500).send("Internal Server Error");
       }
     });
+
+    
+    app.get("/room_details/:RoomTitle", async (req, res) => {
+      const RoomTitle = req.params
+      try {
+        const result = await RoomsDB.findOne(RoomTitle)
+      //   res.send(result);
+      console.log('object', result)
+      res.send(result)
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        res.status(500).send("Internal Server Error");
+      }
+    })
    
 
 
