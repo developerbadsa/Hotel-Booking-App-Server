@@ -31,7 +31,7 @@ async function run() {
 
 
 
-    //all get api
+    //all get api===========================================
     app.get("/rooms", async (req, res) => {
       try {
         const result = await RoomsDB.find({ Availability: 'available' }).toArray();
@@ -47,14 +47,34 @@ async function run() {
       const RoomTitle = req.params
       try {
         const result = await RoomsDB.findOne(RoomTitle)
-      //   res.send(result);
-      console.log('object', result)
       res.send(result)
       } catch (error) {
         console.error("Error fetching data:", error);
         res.status(500).send("Internal Server Error");
       }
     })
+
+
+
+//     post api ===============================
+app.post('/room_details', async (req, res)=>{
+      const userEmail = req.query.email
+      const cardData = req.body
+
+      if (!userEmail) {
+            return res.status(400).json({ error: 'User email not provided' });
+          }
+
+          try{
+            const UserDatasDB = client.db('UserDatas').collection(userEmail)
+
+            const result = await UserDatasDB.insertOne({cardData});
+            res.send(result)
+          }
+          catch(err){
+            console.log(err)
+          }
+})
    
 
 
