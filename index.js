@@ -37,10 +37,13 @@ async function run() {
       }
     });
 
+    //     add Booking
     app.get("/room_details/:RoomTitle", async (req, res) => {
       const RoomTitle = req.params;
+
       try {
         const result = await RoomsDB.findOne(RoomTitle);
+
         res.send(result);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -63,6 +66,7 @@ async function run() {
     });
 
     //     post api ===============================
+
     app.post("/room_details", async (req, res) => {
       const userEmail = req.query.email;
       const cardData = req.body;
@@ -81,6 +85,37 @@ async function run() {
         console.log(err);
       }
     });
+
+    //update requests
+
+    //req update for set available and unavailable
+    app.put("/room_details/:RoomTitle", async (req, res) => {
+      try {
+        const RoomTitle = req.params;
+        const updateDoc = {
+          $set: {
+            Availability: "unavailable",
+          },
+        };
+        const result = await RoomsDB.updateOne(RoomTitle, updateDoc, {
+          upsert: false,
+        });
+        res.send(result);
+      } catch (error) {
+        console.error("Error updating data:", error);
+        res.status(500).send("Internal Server Error");
+      }
+    });
+
+
+
+
+
+
+
+
+
+
 
     await client.db("admin").command({ ping: 1 });
     console.log(
