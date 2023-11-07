@@ -28,6 +28,25 @@ app.use(
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+
+const verifyCookie = (req, res, next) => {
+      const token = req?.cookies?.token;
+    
+      if (!token) {
+        return res.status(401).json({ message: "UnAuthorize" });
+      }
+    
+      jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        if (err) {
+          return res.status(401).json({ message: "token is not valid" });
+        }
+        req.user = decoded;
+        next();
+      });
+    };
+
+
+
 async function run() {
   const RoomsDB = client.db("RoomsDB").collection("roomCollection");
 
@@ -59,15 +78,21 @@ async function run() {
       }
     });
 
-    app.get("/my_bookings", async (req, res) => {
+    app.get("/my_bookings", verifyCookie, async (req, res) => {
       const userEmail = req.query.email.replace(/'/g, "");
+      const user = req.user
       if (!userEmail) {
-        return res.status(400).json({ error: "User email not provided" });
+        return res.status(400)
       }
+
       const UserDatasDB = client.db("UserDatas").collection(userEmail);
       try {
-        const result = await UserDatasDB.find().toArray();
-        res.send(result);
+            if(userEmail === user.userEmail){
+                  const result = await UserDatasDB.find().toArray();
+                  res.send(result);
+            }
+        
+ 
       } catch (err) {
         console.log(err);
       }
