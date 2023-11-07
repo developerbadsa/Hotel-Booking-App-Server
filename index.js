@@ -4,6 +4,8 @@ const app = express();
 const port = process.env.PORT || 5000;
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const uri = process.env.MONGODB_URI;
@@ -19,6 +21,7 @@ const client = new MongoClient(uri, {
 // middlewares
 app.use(cors());
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 async function run() {
   const RoomsDB = client.db("RoomsDB").collection("roomCollection");
@@ -111,29 +114,30 @@ async function run() {
     //Book cancel operation
 
     app.delete("/my_bookings/delete", async (req, res) => {
-      const {deleteBook, email, title} = req.query
+      const { deleteBook, email, title } = req.query;
       const UserDatasDB = client.db("UserDatas").collection(email);
 
-      // delete from my bookings 
-      const myBookingDelete = await UserDatasDB.deleteOne({_id: new ObjectId(deleteBook)});
+      // delete from my bookings
+      const myBookingDelete = await UserDatasDB.deleteOne({
+        _id: new ObjectId(deleteBook),
+      });
 
       const updateDoc = {
-            $set: {
-              Availability: "available",
-            },
-          };
-          const updateRoom = await RoomsDB.updateOne({RoomTitle:title}, updateDoc, {
-            upsert: false,
-          });
+        $set: {
+          Availability: "available",
+        },
+      };
+      const updateRoom = await RoomsDB.updateOne(
+        { RoomTitle: title },
+        updateDoc,
+        {
+          upsert: false,
+        }
+      );
 
-
-      console.log(myBookingDelete, updateRoom )
+      console.log(myBookingDelete, updateRoom);
       res.send();
     });
-
-
-
-
 
     await client.db("admin").command({ ping: 1 });
     console.log(
