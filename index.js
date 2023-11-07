@@ -4,7 +4,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const uri = process.env.MONGODB_URI;
 
@@ -107,11 +107,41 @@ async function run() {
       }
     });
 
+    app.put("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const data = req.body;
+      console.log("id", id, data);
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedUSer = {
+        $set: {
+          name: data.name,
+          password: data.password,
+        },
+      };
+      const result = await usersCollection.updateOne(
+        filter,
+        updatedUSer,
+        options
+      );
+      res.send(result);
+    });
+
+    //================== DELETE OPERATIONS
+    //Book cancel operation
+
+    app.delete("/my_bookings/delete", async (req, res) => {
+      const {deleteBook, email} = req.query
+
+      const UserDatasDB = client.db("UserDatas").collection(email);
+   
+
+      const myBookingDelete = await UserDatasDB.deleteOne({_id: new ObjectId(deleteBook)});
 
 
-
-
-
+      console.log(myBookingDelete)
+      res.send(myBookingDelete);
+    });
 
 
 
