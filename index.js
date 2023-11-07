@@ -104,15 +104,28 @@ async function run() {
       });
 
       res.cookie("token", token, {
-        expires: new Date(Date.now() + 100000),
+        expires: new Date(Date.now() + 10000000),
         httpOnly: false,
         secure: true,
         sameSite: "none",
       });
       res.send("data");
-      console.log(token);
     });
+    //     Logout
+    app.post("/logout", (req, res) => {
+      const token = req.cookies.token
 
+      if(token){
+            res.clearCookie("token", {
+                  httpOnly: false,
+                  secure: true, 
+                  sameSite: "none", 
+                });
+                console.log("Cookie deleted");
+                res.send("Logout successful");
+      }
+
+    });
 
     //update requests
 
