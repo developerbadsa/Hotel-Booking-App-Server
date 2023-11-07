@@ -107,40 +107,28 @@ async function run() {
       }
     });
 
-    app.put("/users/:id", async (req, res) => {
-      const id = req.params.id;
-      const data = req.body;
-      console.log("id", id, data);
-      const filter = { _id: new ObjectId(id) };
-      const options = { upsert: true };
-      const updatedUSer = {
-        $set: {
-          name: data.name,
-          password: data.password,
-        },
-      };
-      const result = await usersCollection.updateOne(
-        filter,
-        updatedUSer,
-        options
-      );
-      res.send(result);
-    });
-
     //================== DELETE OPERATIONS
     //Book cancel operation
 
     app.delete("/my_bookings/delete", async (req, res) => {
-      const {deleteBook, email} = req.query
-
+      const {deleteBook, email, title} = req.query
       const UserDatasDB = client.db("UserDatas").collection(email);
-   
 
+      // delete from my bookings 
       const myBookingDelete = await UserDatasDB.deleteOne({_id: new ObjectId(deleteBook)});
 
+      const updateDoc = {
+            $set: {
+              Availability: "available",
+            },
+          };
+          const updateRoom = await RoomsDB.updateOne({RoomTitle:title}, updateDoc, {
+            upsert: false,
+          });
 
-      console.log(myBookingDelete)
-      res.send(myBookingDelete);
+
+      console.log(myBookingDelete, updateRoom )
+      res.send();
     });
 
 
