@@ -173,6 +173,39 @@ async function run() {
       }
     });
 
+
+
+    app.put('/my_bookings/update_date', async (req, res) => {
+      try {
+        const userEmail = req.query.email;
+        const { updateStartDate, updateEndDate, updateBookingTimeDay, RoomTitle } = req.body;
+        const UserDatasDB = client.db("UserDatas").collection(userEmail);
+    
+        const update = {
+          $set: {
+            BookingTimeDay: updateBookingTimeDay,
+            startDate: updateStartDate,
+            endDate: updateEndDate,
+          },
+        };
+    
+        const result = await UserDatasDB.updateOne({ RoomTitle: RoomTitle}, update, {
+          upsert: false,
+        });
+        
+        if (result.modifiedCount > 0) {
+          res.send("Data updated successfully");
+        } else {
+          res.send("No data was updated. Check RoomTitle and data in the request.");
+        }
+    
+      } catch (error) {
+        console.error("Error updating data:", error);
+        res.status(500).send("Internal server error");
+      }
+    });
+
+
     //================== DELETE OPERATIONS
     //Book cancel operation
 
