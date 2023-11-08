@@ -21,7 +21,7 @@ const client = new MongoClient(uri, {
 // middlewares
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", 'https://hotels-room-booking-project.web.app' ],
     credentials: true,
   })
 );
