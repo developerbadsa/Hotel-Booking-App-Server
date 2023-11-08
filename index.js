@@ -152,6 +152,42 @@ async function run() {
 
     });
 
+
+    // review post
+    app.post("/room_review", async (req, res) => {
+      const userEmail = req.query.email;
+      const {review} = req.body;
+
+      try {
+       
+        const filter = { UserEmail: userEmail };
+    
+        const update = {
+          $push: {
+            "Reviews": review
+          }
+        };
+    
+
+        const result = await RoomsDB.updateOne(filter, update);
+    
+      }catch (err) {
+        console.log(err);
+      }
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
     //update requests
 
     //req update for set available and unavailable
