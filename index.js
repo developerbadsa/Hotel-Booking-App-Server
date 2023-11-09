@@ -153,31 +153,32 @@ async function run() {
     });
 
 
+
+
     // review post
     app.post("/room_review", async (req, res) => {
-      const userEmail = req.query.email;
-      const {review} = req.body;
+      const title = req.query.title;
+      const {reviewdata} = req.body;
 
       try {
        
-        const filter = { UserEmail: userEmail };
+        const filter = { RoomTitle: title };
     
         const update = {
           $push: {
-            "Reviews": review
+            "Reviews": reviewdata
           }
         };
     
 
         const result = await RoomsDB.updateOne(filter, update);
+        console.log(update)
+        res.send(result)
     
       }catch (err) {
         console.log(err);
       }
-    });
-
-
-
+    })
 
 
 
