@@ -23,7 +23,7 @@ const client = new MongoClient(uri, {
 // middlewares
 app.use(
   cors({
-    origin: ["http://localhost:5173", 'https://hotels-room-booking-project.web.app', 'https://venerable-conkies-4e8159.netlify.app' ],
+    origin: ["http://localhost:5173", 'https://hotels-room-booking-project.web.app', 'https://venerable-conkies-4e8159.netlify.app', 'https://hotel-b8387.web.app' ],
     credentials: true,
   })
 );
