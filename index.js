@@ -6,6 +6,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+
+
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 const uri = process.env.MONGODB_URI;
@@ -21,7 +23,7 @@ const client = new MongoClient(uri, {
 // middlewares
 app.use(
   cors({
-    origin: ["http://localhost:5173", 'https://hotels-room-booking-project.web.app' ],
+    origin: ["http://localhost:5173", 'https://hotels-room-booking-project.web.app', 'https://venerable-conkies-4e8159.netlify.app' ],
     credentials: true,
   })
 );
