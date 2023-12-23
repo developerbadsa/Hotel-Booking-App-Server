@@ -138,6 +138,9 @@ async function run() {
       });
       res.send("data");
     });
+
+
+
     //     Logout
     app.post("/logout", (req, res) => {
       const token = req.cookies.token
@@ -184,13 +187,6 @@ async function run() {
 
 
 
-
-
-
-
-
-
-
     //update requests
 
     //req update for set available and unavailable
@@ -212,6 +208,9 @@ async function run() {
       }
     });
 
+
+
+    // Update booking
 
 
     app.put('/my_bookings/update_date', async (req, res) => {
